@@ -9,6 +9,7 @@ using Microsoft.Extensions.Logging;
 using NLog.Extensions.Logging;
 using NLog.Web;
 using WebApplicationCore.Portal.Data;
+using WebApplicationCore.Portal.Log4Net;
 using WebApplicationCore.Portal.Models;
 using WebApplicationCore.Portal.Services;
 
@@ -67,6 +68,8 @@ namespace WebApplicationCore.Portal
 
             //add NLog.Web
             app.AddNLogWeb();
+
+            loggerFactory.AddLog4Net();
 
             if (env.IsDevelopment())
             {

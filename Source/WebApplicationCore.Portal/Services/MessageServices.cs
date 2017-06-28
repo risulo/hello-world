@@ -12,6 +12,11 @@ namespace WebApplicationCore.Portal.Services
     {
         public Task SendEmailAsync(string email, string subject, string message)
         {
+            if(string.IsNullOrWhiteSpace(email))
+            {
+                throw new ArgumentNullException(nameof(email));
+            }
+
             // Plug in your email service here to send an email.
             return Task.FromResult(0);
         }

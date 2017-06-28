@@ -105,7 +105,10 @@ namespace WebApplicationCore.Portal
             //loggerFactory.AddDebug();
 
             //add NLog to ASP.NET Core
-            loggerFactory.AddNLog();
+            loggerFactory.AddNLog(new NLogProviderOptions
+            {
+              EventIdSeparator = " "
+            });
 
             //add NLog.Web
             app.AddNLogWeb();

@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -30,6 +31,7 @@ namespace WebApplicationCore.Portal.Log4Net
         }
         private Log4NetLogger CreateLoggerImplementation(string name)
         {
+            log4net.GlobalContext.Properties["pid"] = Process.GetCurrentProcess().Id;
             return new Log4NetLogger(name, Parselog4NetConfigFile(_log4NetConfigFile));
         }
 

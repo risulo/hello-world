@@ -12,15 +12,19 @@ namespace WebApplicationCore.Portal.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly Serilog.ILogger _serilogLogger;
 
-        public HomeController(ILogger<HomeController> logger, IHttpContextAccessor httpContextAccessor)
+        public HomeController(ILogger<HomeController> logger, IHttpContextAccessor httpContextAccessor, Serilog.ILogger serilogLogger)
         {
             _logger = logger;
             _httpContextAccessor = httpContextAccessor;
+            _serilogLogger = serilogLogger;
         }
 
         public IActionResult Index()
         {
+            _serilogLogger.ForContext("User", "Aditya").ForContext("Other", "HomeController").Information("Data Added Successfully");
+
             _logger.LogDebug("Index page says hello");
             _logger.LogInformation(1001, "Index page says hello");
             _logger.LogWarning("Index page says hello");

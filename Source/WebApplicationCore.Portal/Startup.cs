@@ -8,6 +8,12 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using NLog.Extensions.Logging;
 using NLog.Web;
+using Serilog;
+using Serilog.Events;
+using Serilog.Models;
+using Serilog.Sinks.MSSqlServer;
+using System.Collections.ObjectModel;
+using System.IO;
 using WebApplicationCore.Portal.Data;
 using WebApplicationCore.Portal.Log4Net;
 using WebApplicationCore.Portal.Models;
@@ -55,6 +61,41 @@ namespace WebApplicationCore.Portal
             // Add application services.
             services.AddTransient<IEmailSender, AuthMessageSender>();
             services.AddTransient<ISmsSender, AuthMessageSender>();
+
+            //var columnOptions = new ColumnOptions
+            //{
+            //    AdditionalDataColumns = new Collection<DataColumn>
+            //    {
+            //        new DataColumn {DataType = typeof (string), ColumnName = "User", AllowDBNull = true},
+            //        new DataColumn {DataType = typeof (string), ColumnName = "Other", AllowDBNull = true},
+            //    }
+            //};
+            //columnOptions.Store.Add(StandardColumn.LogEvent);
+
+            var x = Configuration["Serilog:ConnectionString"];
+            var y = Configuration["Serilog:TableName"];
+
+            Log.Logger = new LoggerConfiguration()
+                            .MinimumLevel.Debug()
+                            .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
+                            .MinimumLevel.Override("System", LogEventLevel.Error)
+                            .WriteTo.RollingFile(@"C:\temp\WebApplicationCore.Portal-Serilog-{Date}.txt")
+                            .WriteTo.MSSqlServer(Configuration["Serilog:ConnectionString"]
+                                , Configuration["Serilog:TableName"]
+                                , LogEventLevel.Debug
+                                //, columnOptions: columnOptions
+                                , autoCreateSqlTable: true)
+                            .CreateLogger();
+
+            services.AddSingleton<Serilog.ILogger>(Log.Logger);
+
+            //services.AddSingleton<Serilog.ILogger>
+            //(x => new LoggerConfiguration()
+            //      .MinimumLevel.Debug()
+            //      .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
+            //      .MinimumLevel.Override("System", LogEventLevel.Error)
+            //      .WriteTo.RollingFile(@"C:\temp\WebApplicationCore.Portal-Serilog-{Date}.txt")
+            //      .CreateLogger());
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -70,6 +111,8 @@ namespace WebApplicationCore.Portal
             app.AddNLogWeb();
 
             loggerFactory.AddLog4Net();
+
+            loggerFactory.AddSerilog();
 
             if (env.IsDevelopment())
             {

@@ -12,6 +12,7 @@
     <UserSecretsId>aspnet-WebApplicationCore.Portal-974141f3-9983-41d8-9624-a160d64d0ae6</UserSecretsId>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="chimera.extensions.logging.log4net" Version="1.1.1" />
     <PackageReference Include="log4net" Version="2.0.8" />
     <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.0.1" />
     <PackageReference Include="Microsoft.AspNetCore" Version="1.1.2" />

@@ -16,7 +16,7 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using WebApplicationCore.Portal.Data;
-//using WebApplicationCore.Portal.Log4Net;
+using WebApplicationCore.Portal.Log4Net;
 using WebApplicationCore.Portal.Models;
 using WebApplicationCore.Portal.Services;
 
@@ -106,16 +106,17 @@ namespace WebApplicationCore.Portal
             //loggerFactory.AddDebug();
 
             //add NLog to ASP.NET Core
-            loggerFactory.AddNLog(new NLogProviderOptions
-            {
-              EventIdSeparator = " "
-            });
+            loggerFactory.AddNLog();
+            NLog.GlobalDiagnosticsContext.Set("pid", Process.GetCurrentProcess().Id);
+            NLog.GlobalDiagnosticsContext.Set("TickCount", MdcTickProperty.Default);
+            //NLog.MappedDiagnosticsContext.Set("TickCount", MdcTickProperty.Default);
 
             //add NLog.Web
             app.AddNLogWeb();
-
+            
             log4net.GlobalContext.Properties["pid"] = Process.GetCurrentProcess().Id;
             loggerFactory.AddLog4Net();
+
             //loggerFactory.AddLog4Net_Custom();
 
             loggerFactory.AddSerilog();

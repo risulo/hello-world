@@ -124,5 +124,6 @@ namespace WebApplicationCore.Portal.Controllers
 
             public string Title { get; set; }
         }
+
     }
 }

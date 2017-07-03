@@ -39,7 +39,6 @@ namespace WebApplicationCore.Portal
 
             builder.AddEnvironmentVariables();
             Configuration = builder.Build();
-            env.ConfigureNLog("nlog.config");
         }
 
         public IConfigurationRoot Configuration { get; }
@@ -57,11 +56,10 @@ namespace WebApplicationCore.Portal
 
             services.AddMvc();
 
-            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-
             // Add application services.
             services.AddTransient<IEmailSender, AuthMessageSender>();
             services.AddTransient<ISmsSender, AuthMessageSender>();
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
             //var columnOptions = new ColumnOptions
             //{
@@ -144,6 +142,8 @@ namespace WebApplicationCore.Portal
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
+
+            env.ConfigureNLog("nlog.config");
         }
     }
 }

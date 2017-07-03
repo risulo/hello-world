@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -9,7 +10,8 @@ namespace WebApplicationCore.Portal
     {
         public static readonly MdcTickProperty Default = new MdcTickProperty();
 
-        private MdcTickProperty()
+
+        private MdcTickProperty() //IHttpContextAccessor httpContextAccessor)
         {
         }
 

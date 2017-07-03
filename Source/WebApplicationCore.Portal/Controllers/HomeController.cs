@@ -86,7 +86,7 @@ namespace WebApplicationCore.Portal.Controllers
 
                 var person = new Person { FirstName = "Richrad", LastName = "Castle" };
                 var book = new Book { Author = "Dominik Dan", Title = "Basnik" };
-                nlog.Fatal<Person, Book>("NLOG Fatal with 2 classes", person, book);
+                //nlog.Fatal<Person, Book>("NLOG Fatal with 2 classes", person, book);
             }
 
             return View();

@@ -3,13 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.26430.12
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleAppCore", "ConsoleAppCore\ConsoleAppCore.csproj", "{4CED05A3-37BD-4880-873C-4E97EC61F745}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleAppCore", "ConsoleAppCore\ConsoleAppCore.csproj", "{4CED05A3-37BD-4880-873C-4E97EC61F745}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApplicationCore.Portal", "WebApplicationCore.Portal\WebApplicationCore.Portal.csproj", "{E459D3CC-543D-409E-BA0C-C97B1F102725}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApplicationCore.Portal", "WebApplicationCore.Portal\WebApplicationCore.Portal.csproj", "{E459D3CC-543D-409E-BA0C-C97B1F102725}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApplicationCore.API", "WebApplicationCore.API\WebApplicationCore.API.csproj", "{21A449B1-0CCE-4D47-805D-F093319EC481}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApplicationCore.API", "WebApplicationCore.API\WebApplicationCore.API.csproj", "{21A449B1-0CCE-4D47-805D-F093319EC481}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApplicationCore.Portal.DependencyResolver", "WebApplicationCore.Portal.DependencyResolver\WebApplicationCore.Portal.DependencyResolver.csproj", "{CBA4199E-F3B2-480A-AF45-01ADCC12317E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApplicationCore.Portal.DependencyResolver", "WebApplicationCore.Portal.DependencyResolver\WebApplicationCore.Portal.DependencyResolver.csproj", "{CBA4199E-F3B2-480A-AF45-01ADCC12317E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

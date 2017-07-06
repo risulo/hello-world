@@ -15,6 +15,7 @@ using Serilog.Sinks.MSSqlServer;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
+using WebApplicationCore.Portal.Configuration;
 using WebApplicationCore.Portal.Data;
 using WebApplicationCore.Portal.Log4Net;
 using WebApplicationCore.Portal.Models;
@@ -26,10 +27,17 @@ namespace WebApplicationCore.Portal
     {
         public Startup(IHostingEnvironment env)
         {
+            var connectionBuilder = new ConfigurationBuilder();
+            connectionBuilder.SetBasePath(Directory.GetCurrentDirectory());
+            connectionBuilder.AddJsonFile("appsettings.json");
+            var connectionStringConfig = connectionBuilder.Build();
+
             var builder = new ConfigurationBuilder()
                 .SetBasePath(env.ContentRootPath)
                 .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-                .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true);
+                .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
+                .AddEntityFrameworkConfig(connectionStringConfig["ContainerName"], options =>
+                                options.UseSqlServer(connectionStringConfig.GetConnectionString("DefaultConnection")));
 
             if (env.IsDevelopment())
             {
@@ -54,12 +62,17 @@ namespace WebApplicationCore.Portal
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
 
+            services.AddOptions();
+            services.Configure<CryptographyCertificate>(Configuration.GetSection("CryptographyCertificate"));
+            services.Configure<AppOptions>(Configuration.GetSection("app"));
+
             services.AddMvc();
 
             // Add application services.
             services.AddTransient<IEmailSender, AuthMessageSender>();
             services.AddTransient<ISmsSender, AuthMessageSender>();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddSingleton<IConfiguration>(Configuration);
 
             //var columnOptions = new ColumnOptions
             //{
@@ -73,6 +86,18 @@ namespace WebApplicationCore.Portal
 
             var x = Configuration["Serilog:ConnectionString"];
             var y = Configuration["Serilog:TableName"];
+
+            var key1 = Configuration["key1"];
+
+            var cryptographyCertificate = new CryptographyCertificate();
+            Configuration.GetSection("CryptographyCertificate").Bind(cryptographyCertificate);
+            var findValue = cryptographyCertificate.FindValue;
+
+            var appOptions = Configuration.GetSection("app").Get<AppOptions>();
+            var height = appOptions.Window.Height;
+
+            var cryptographyCertificate2 = Configuration.GetSection("CryptographyCertificate").Get<CryptographyCertificate>();
+            var findValue2 = cryptographyCertificate2.FindValue;
 
             Log.Logger = new LoggerConfiguration()
                             .MinimumLevel.Debug()
@@ -102,6 +127,8 @@ namespace WebApplicationCore.Portal
         {
             //loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             //loggerFactory.AddDebug();
+
+            var envName = env.EnvironmentName;
 
             //add NLog to ASP.NET Core
             loggerFactory.AddNLog();

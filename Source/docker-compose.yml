@@ -1,0 +1,8 @@
+version: '2'
+
+services:
+  webapplicationcore.portal:
+    image: webapplicationcore.portal
+    build:
+      context: ./WebApplicationCore.Portal
+      dockerfile: Dockerfile

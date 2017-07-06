@@ -10,6 +10,7 @@
 
   <PropertyGroup>
     <UserSecretsId>aspnet-WebApplicationCore.Portal-974141f3-9983-41d8-9624-a160d64d0ae6</UserSecretsId>
+    <DockerComposeProjectPath>..\docker-compose.dcproj</DockerComposeProjectPath>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="chimera.extensions.logging.log4net" Version="1.1.1" />
@@ -47,6 +48,9 @@
     <None Update="nlog.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Configuration\Migrations\" />
   </ItemGroup>
 
 </Project>

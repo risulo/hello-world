@@ -10,7 +10,7 @@ using Microsoft.Extensions.Logging;
 
 namespace WebApplicationCore.API
 {
-    public class Startup
+    public partial class Startup
     {
         public Startup(IHostingEnvironment env)
         {

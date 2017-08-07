@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26430.12
+VisualStudioVersion = 15.0.26430.16
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleAppCore", "ConsoleAppCore\ConsoleAppCore.csproj", "{4CED05A3-37BD-4880-873C-4E97EC61F745}"
 EndProject
@@ -11,7 +11,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApplicationCore.API", "W
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApplicationCore.Portal.DependencyResolver", "WebApplicationCore.Portal.DependencyResolver\WebApplicationCore.Portal.DependencyResolver.csproj", "{CBA4199E-F3B2-480A-AF45-01ADCC12317E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuthorizationServer_OpenIddict", "AuthorizationServer_OpenIddict\AuthorizationServer_OpenIddict.csproj", "{CE2390E6-C7EC-4F55-A619-378BE73F4AA2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AuthorizationServer_OpenIddict", "AuthorizationServer_OpenIddict\AuthorizationServer_OpenIddict.csproj", "{CE2390E6-C7EC-4F55-A619-378BE73F4AA2}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{A37ACD56-7437-4DD8-A523-AD4FB8C6A608}"
+	ProjectSection(SolutionItems) = preProject
+		NuGet.config = NuGet.config
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

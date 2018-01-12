@@ -1,11 +1,13 @@
 ﻿using log4net;
 using log4net.Core;
 using log4net.Repository;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Xml;
 
@@ -13,6 +15,9 @@ namespace WebApplicationCore.Portal.Log4Net
 {
     public class Log4NetLogger : Microsoft.Extensions.Logging.ILogger
     {
+        //private IHttpContextAccessor _contextAccessor;
+        //private HttpContext _context { get { return _contextAccessor.HttpContext; } }
+
         private readonly string _name;
         private readonly XmlElement _xmlElement;
         private readonly ILog _log;
@@ -25,6 +30,8 @@ namespace WebApplicationCore.Portal.Log4Net
                 Assembly.GetEntryAssembly(), typeof(log4net.Repository.Hierarchy.Hierarchy));
             _log = LogManager.GetLogger(_loggerRepository.Name, name);
             log4net.Config.XmlConfigurator.Configure(_loggerRepository, xmlElement);
+
+            //_contextAccessor = contextAccessor;
         }
         public IDisposable BeginScope<TState>(TState state)
         {
@@ -70,6 +77,8 @@ namespace WebApplicationCore.Portal.Log4Net
             }
             if (!string.IsNullOrEmpty(message) || exception != null)
             {
+                //log4net.GlobalContext.Properties["contextId"] = ContextId;
+
                 switch (logLevel)
                 {
                     case LogLevel.Critical:
@@ -95,5 +104,26 @@ namespace WebApplicationCore.Portal.Log4Net
                 }
             }
         }
+
+        //private string ContextId
+        //{
+        //    get
+        //    {
+        //        var contextId = string.Empty;
+        //        if (_context.User.Identity != null)
+        //        {
+        //            if ((_context.User.Identity is ClaimsIdentity claimsIdentity))
+        //            {
+        //                contextId = string.Format("{0}-{1}", _context.User.Identity.Name, claimsIdentity.Label);
+        //            }
+        //            else
+        //            {
+        //                contextId = _context.User.Identity.Name;
+        //            }
+                        
+        //        }
+        //        return contextId;
+        //    }
+        //}
     }
 }

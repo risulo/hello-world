@@ -1,15 +1,26 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26430.12
+VisualStudioVersion = 15.0.26730.10
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleAppCore", "ConsoleAppCore\ConsoleAppCore.csproj", "{4CED05A3-37BD-4880-873C-4E97EC61F745}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleAppCore", "ConsoleAppCore\ConsoleAppCore.csproj", "{4CED05A3-37BD-4880-873C-4E97EC61F745}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApplicationCore.Portal", "WebApplicationCore.Portal\WebApplicationCore.Portal.csproj", "{E459D3CC-543D-409E-BA0C-C97B1F102725}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApplicationCore.Portal", "WebApplicationCore.Portal\WebApplicationCore.Portal.csproj", "{E459D3CC-543D-409E-BA0C-C97B1F102725}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApplicationCore.API", "WebApplicationCore.API\WebApplicationCore.API.csproj", "{21A449B1-0CCE-4D47-805D-F093319EC481}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApplicationCore.API", "WebApplicationCore.API\WebApplicationCore.API.csproj", "{21A449B1-0CCE-4D47-805D-F093319EC481}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApplicationCore.Portal.DependencyResolver", "WebApplicationCore.Portal.DependencyResolver\WebApplicationCore.Portal.DependencyResolver.csproj", "{CBA4199E-F3B2-480A-AF45-01ADCC12317E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApplicationCore.Portal.DependencyResolver", "WebApplicationCore.Portal.DependencyResolver\WebApplicationCore.Portal.DependencyResolver.csproj", "{CBA4199E-F3B2-480A-AF45-01ADCC12317E}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AuthorizationServer_OpenIddict", "AuthorizationServer_OpenIddict\AuthorizationServer_OpenIddict.csproj", "{CE2390E6-C7EC-4F55-A619-378BE73F4AA2}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{A37ACD56-7437-4DD8-A523-AD4FB8C6A608}"
+	ProjectSection(SolutionItems) = preProject
+		NuGet.config = NuGet.config
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApplication_React", "WebApplication_React\WebApplication_React.csproj", "{A80C116E-E89A-4127-AAAA-1C24F16A77B8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApplication_ReactRedux", "WebApplication_ReactRedux\WebApplication_ReactRedux.csproj", "{A690F96F-7466-4142-842F-9AB65B04FC54}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,8 +44,23 @@ Global
 		{CBA4199E-F3B2-480A-AF45-01ADCC12317E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CBA4199E-F3B2-480A-AF45-01ADCC12317E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CBA4199E-F3B2-480A-AF45-01ADCC12317E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CE2390E6-C7EC-4F55-A619-378BE73F4AA2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CE2390E6-C7EC-4F55-A619-378BE73F4AA2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CE2390E6-C7EC-4F55-A619-378BE73F4AA2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CE2390E6-C7EC-4F55-A619-378BE73F4AA2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A80C116E-E89A-4127-AAAA-1C24F16A77B8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A80C116E-E89A-4127-AAAA-1C24F16A77B8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A80C116E-E89A-4127-AAAA-1C24F16A77B8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A80C116E-E89A-4127-AAAA-1C24F16A77B8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A690F96F-7466-4142-842F-9AB65B04FC54}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A690F96F-7466-4142-842F-9AB65B04FC54}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A690F96F-7466-4142-842F-9AB65B04FC54}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A690F96F-7466-4142-842F-9AB65B04FC54}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {5948DC89-0A5A-4E9E-828B-6216AA16607F}
 	EndGlobalSection
 EndGlobal

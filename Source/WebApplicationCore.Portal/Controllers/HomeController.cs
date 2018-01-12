@@ -9,6 +9,9 @@ using Newtonsoft.Json;
 using WebApplicationCore.Portal.Services;
 using System.Xml;
 using System.Reflection;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
+using WebApplicationCore.Portal.Configuration;
 
 namespace WebApplicationCore.Portal.Controllers
 {
@@ -21,16 +24,32 @@ namespace WebApplicationCore.Portal.Controllers
         private readonly ILogger<HomeController> _logger;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly Serilog.ILogger _serilogLogger;
+        private readonly IConfiguration _configuration;
+        private readonly CryptographyCertificate _cryptographyCertificate;
+        private readonly AppOptions _appOptions;
 
-        public HomeController(ILogger<HomeController> logger, IHttpContextAccessor httpContextAccessor, Serilog.ILogger serilogLogger)
+        public HomeController(ILogger<HomeController> logger, IConfiguration configuration, 
+            IHttpContextAccessor httpContextAccessor, Serilog.ILogger serilogLogger,
+            IOptions<CryptographyCertificate> optionsAccessor, IOptions<AppOptions> optionsAccessor2)
         {
             _logger = logger;
+            _configuration = configuration;
             _httpContextAccessor = httpContextAccessor;
             _serilogLogger = serilogLogger;
+            _cryptographyCertificate = optionsAccessor.Value;
+            _appOptions = optionsAccessor2.Value;
         }
 
         public IActionResult Index()
         {
+            var x = _configuration["Serilog:ConnectionString"];
+            var y = _cryptographyCertificate.FindValue;
+            var z = _configuration["CryptographyCertificate:FindValue"];
+            var t = _appOptions.Window.Height;
+
+            var cryptographyCertificate = _configuration.GetSection("CryptographyCertificate").Get<CryptographyCertificate>();
+            var findValue = cryptographyCertificate.FindValue;
+
             //_serilogLogger.ForContext("User", "Aditya").ForContext("Other", "HomeController").Information("Data Added Successfully");
 
             //_logger.LogDebug("Index page says hello");
@@ -86,7 +105,7 @@ namespace WebApplicationCore.Portal.Controllers
 
                 var person = new Person { FirstName = "Richrad", LastName = "Castle" };
                 var book = new Book { Author = "Dominik Dan", Title = "Basnik" };
-                nlog.Fatal<Person, Book>("NLOG Fatal with 2 classes", person, book);
+                //nlog.Fatal<Person, Book>("NLOG Fatal with 2 classes", person, book);
             }
 
             return View();
@@ -124,5 +143,6 @@ namespace WebApplicationCore.Portal.Controllers
 
             public string Title { get; set; }
         }
+
     }
 }

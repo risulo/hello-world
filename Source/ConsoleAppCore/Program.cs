@@ -15,13 +15,15 @@ namespace ConsoleAppCore
         {
             //Console.WriteLine("Hello World Updated!");
 
+            var accountRequestId = "533e8b81-5818-4a1b-bfb9-e893de48bb17";
+
             var openBankingClaim = new OpenBankingClaim
             {
                 IdToken = new OpenBankingTokenInfo
                 {
                     OpenbankingIntentId = new OpenBankingIntentInfo
                     {
-                        Value = "9deebe47-d2b6-4f45-9bad-fcb345b2c17c",
+                        Value = accountRequestId,
                         Essential = true
                     }
                 }

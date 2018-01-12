@@ -28,7 +28,13 @@ namespace ConsoleAppCore
                     }
                 }
             };
-            
+
+
+            //Header added by AddHeader are ignored and basic implementation adds 2 headers manually this way:
+            //  header.Add("typ", "JWT");
+            //  header.Add("alg", _algorithm.Name);
+            //Therefore the final result is different than we expect.
+            /*
             var builder = new JwtBuilder().WithAlgorithm(new HMACSHA256Algorithm()).WithSecret("secret");
             builder.AddHeader(HeaderName.Algorithm, "none");
             builder.AddHeader(HeaderName.Type, "JWT");
@@ -38,7 +44,7 @@ namespace ConsoleAppCore
             builder.AddClaim("claims", openBankingClaim);
             var str = builder.Build();
             Console.WriteLine(str);
-
+            */
 
 
             var jsonSerializer = new JsonNetSerializer();

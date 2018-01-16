@@ -8,6 +8,9 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -88,9 +91,9 @@ namespace ConsoleAppCore
 
             #region Get Intelliflo clients
 
-            var response = SendGetRequest("clients");
-            Console.WriteLine(response);
-            Console.WriteLine("\n");
+            //var response = SendGetRequest("clients");
+            //Console.WriteLine(response);
+            //Console.WriteLine("\n");
 
             #endregion Get Intelliflo clients
             
@@ -109,9 +112,17 @@ namespace ConsoleAppCore
                 { "Risk", new object() }
             };
 
-            var data = JsonConvert.SerializeObject(body);
+            //var data = JsonConvert.SerializeObject(body);
             //var response2 = SendPostRequest("account-requests", data);
             //Console.WriteLine(response2);
+
+            var data = "grant_type=client_credentials&scope=accounts payments openid";
+            var response2 = SendPostRequest("token", data);
+            Console.WriteLine(response2);
+
+            var response3 = SendPostRequest2("token", data);
+            Console.WriteLine("\n");
+            Console.WriteLine(response3);
 
             #endregion Post OB account request
         }
@@ -147,16 +158,114 @@ namespace ConsoleAppCore
             }
         }
 
+        public static X509Certificate2 FindCertificate(StoreLocation location, StoreName name, X509FindType findType, string findValue)
+        {
+            var store = new X509Store(name, location);
+            
+            // create and open store for read-only access
+            store.Open(OpenFlags.ReadOnly);
+
+            // search store
+            var col = store.Certificates.Find(findType, findValue, false);
+
+            // return first certificate found
+            return col[0];
+        }
+
         private static string SendPostRequest(string action, string jsonData)
         {
-            string baseUrl = "https://modelobank.o3bank.co.uk:4101/open-banking/v1.1";
-            var httpWebRequest = (HttpWebRequest)WebRequest.Create(baseUrl + "/" + action);
+            var storeLocation = StoreLocation.LocalMachine;
+            var storeName = StoreName.My;
+            var findType = X509FindType.FindByThumbprint;
+            string findValue = "86EB0794C6610C079AB3CAB61B9A92B5F2BE6D9F";
+            var certificate = FindCertificate(storeLocation, storeName, findType, findValue);
+
+            try
+            {
+
+                using (var clientHandler = new HttpClientHandler())
+                {
+                    clientHandler.ClientCertificates.Add(certificate);
+                    clientHandler.ClientCertificateOptions = ClientCertificateOption.Manual;
+
+                    clientHandler.ServerCertificateCustomValidationCallback = (message, cert, chain, errors) =>
+                    {
+                        //Certificate for https://modelobank.o3bank.co.uk:4501 has invalid issuer
+                        if (errors == System.Net.Security.SslPolicyErrors.RemoteCertificateChainErrors && cert.Issuer.Contains("Open Banking Test"))
+                        {
+                            return true;
+                        }
+
+                        return (errors == System.Net.Security.SslPolicyErrors.None);
+                    };
+
+                    var myModel = new Dictionary<string, string>
+                    {
+                        { "grant_type", "client_credentials" },
+                        { "scope", "accounts payments openid" },
+                    };
+
+                    //var myModel = new Dictionary<string, string>
+                    //{
+                    //    { "grant_type", "password" },
+                    //    { "username", "username" },
+                    //    { "password", "password" }
+                    //};
+
+                    using (var content = new FormUrlEncodedContent(myModel))
+                    using (var client = new HttpClient(clientHandler))
+                    {
+                        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", "ZTYyMzhlMjItZGMwZi00YTUxLTgzMTEtZWE1MzUwNTkxMDYzOmEzMDMwZWNkLWY1MmEtNDg4Mi05Mjg5LTFhNDE3MzQzOGExYw==");
+                        //client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", "Q2VydFRlc3RVc2VyOlB3ZDQ4OSo/WjAyM2E=");
+                        using (HttpResponseMessage response = client.PostAsync("https://modelobank.o3bank.co.uk:4501/token", content).Result)
+                        //using (HttpResponseMessage response = client.PostAsync("https://casdev.certua.io/Token", content).Result)
+                        {
+                            response.EnsureSuccessStatusCode();
+                            string jsonString = response.Content.ReadAsStringAsync().Result;
+                            //var json = new Newtonsoft.Json.JsonSerializer();
+                            //var myClass = JsonConvert.DeserializeObject<MyClass>(json);
+                            return jsonString;
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                //this.LogException(ex);
+                var msg = ex.Message;
+                throw;
+            }
+        }
+
+        private static string SendPostRequest2(string action, string jsonData)
+        {
+            var storeLocation = StoreLocation.LocalMachine;
+            var storeName = StoreName.My;
+            var findType = X509FindType.FindByThumbprint;
+            string findValue = "86EB0794C6610C079AB3CAB61B9A92B5F2BE6D9F";
+            var certificate = FindCertificate(storeLocation, storeName, findType, findValue);
+
+            //string baseUrl = "https://modelobank.o3bank.co.uk:4101/open-banking/v1.1";
+            string baseUrl = "https://modelobank.o3bank.co.uk:4501";
+            HttpWebRequest httpWebRequest = (HttpWebRequest)WebRequest.Create(baseUrl + "/" + action);
+            httpWebRequest.ClientCertificates.Add(certificate);
+            httpWebRequest.ServerCertificateValidationCallback = (message, cert, chain, errors) =>
+            {
+                //Certificate for https://modelobank.o3bank.co.uk:4501 has invalid issuer
+                if (errors == System.Net.Security.SslPolicyErrors.RemoteCertificateChainErrors && cert.Issuer.Contains("Open Banking Test"))
+                {
+                    return true;
+                }
+
+                return (errors == System.Net.Security.SslPolicyErrors.None);
+            };
             HttpWebResponse httpResponse = null;
 
             try
             {
                 httpWebRequest.Method = "POST";
-                httpWebRequest.ContentType = "application/json";
+                //httpWebRequest.ContentType = "application/json";
+                httpWebRequest.ContentType = "application/x-www-form-urlencoded";
                 AddAuthHeader_OB(httpWebRequest);
 
                 using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStreamAsync().Result))
@@ -184,17 +293,20 @@ namespace ConsoleAppCore
 
         private static void AddAuthHeader_OB(HttpWebRequest httpWebRequest)
         {
-            var accessToken = "23acbbc7-bf91-4e52-8ca1-6aa6d0cc1779";
-            httpWebRequest.Headers["x-fapi-financial-id"] = "7umx5nTR33811QyQfi";
-            httpWebRequest.Headers["x-fapi-customer-last-logged-time"] = DateTime.UtcNow.ToString();
-            httpWebRequest.Headers["x-fapi-customer-ip-address"] = "10.1.1.10";
-            httpWebRequest.Headers["x-fapi-interaction-id"] = Guid.NewGuid().ToString();
-            httpWebRequest.Headers["Authorization"] = "Bearer " + accessToken;
+            var basicToken = "ZTYyMzhlMjItZGMwZi00YTUxLTgzMTEtZWE1MzUwNTkxMDYzOmEzMDMwZWNkLWY1MmEtNDg4Mi05Mjg5LTFhNDE3MzQzOGExYw==";
+            httpWebRequest.Headers["Authorization"] = "Basic " + basicToken;
+
+            //var accessToken = "23acbbc7-bf91-4e52-8ca1-6aa6d0cc1779";
+            //httpWebRequest.Headers["x-fapi-financial-id"] = "7umx5nTR33811QyQfi";
+            //httpWebRequest.Headers["x-fapi-customer-last-logged-time"] = DateTime.UtcNow.ToString();
+            //httpWebRequest.Headers["x-fapi-customer-ip-address"] = "10.1.1.10";
+            //httpWebRequest.Headers["x-fapi-interaction-id"] = Guid.NewGuid().ToString();
+            //httpWebRequest.Headers["Authorization"] = "Bearer " + accessToken;
         }
 
         private static void AddAuthHeader_Intelliflo(HttpWebRequest httpWebRequest)
         {
-            var accessToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6Impvb25tcFBvaUtmMm9LMkdfVUdhOGJ3dEk1cyIsImtpZCI6Impvb25tcFBvaUtmMm9LMkdfVUdhOGJ3dEk1cyJ9.eyJpc3MiOiJodHRwczovL2lkc3J2My5jb20iLCJhdWQiOiJodHRwczovL2lkc3J2My5jb20vcmVzb3VyY2VzIiwiZXhwIjoxNTE1Nzc1MDgxLCJuYmYiOjE1MTU3NzE0ODEsImNsaWVudF9pZCI6ImFwcC0wZTk2Njk1LXRjZi1kM2Q3ZWNhYWIzYmE0OThlODZkNGJmNDdjOTVlZDcxZSIsInJlYWNoIjoidGVuYW50IiwidGVuYW50X2lkIjoiMTI1NTEiLCJ0ZW5hbnRfZ3VpZCI6IjQyOWQ3M2I1LTgzYjUtNGFiYS1hZmIwLTkzM2U0MTA3MDRmNyIsInNjb3BlIjpbImNsaWVudF9kYXRhIiwiY2xpZW50X2ZpbmFuY2lhbF9kYXRhIiwiZmlybV9kYXRhIiwiZnVuZF9kYXRhIl19.AA8AkVNRIhcVK0q5dooLgLoCm6GieV1SYx2uhkvwAvi2stsYV_opxT0AXzU_EpCPwo2J85plBwGYeh5la9BQmH2CE6qqAxfWzrc61EjAJRYcr1J4BGebAgzvkQW38j6pJxC1LgfMy6hVZXqOO3xWD7Qv-KLOozWB2HCu6GQLa2fRrWCau_640lUJPwoTGua71ZvCLXKDeMTkdnVdwiRfCMXbn5tMTO0daLDsZTAu-yv_gRvzna0fs3ttOmUDdrMpjOvmcYGeX_57PYaMG-JDWO_JsBpJog6kzKZPwfrgJzTRh6Ywu1n6qIgWitrFPQ23b43FD9qrdaRBL94CZv1SyA";
+            var accessToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6Impvb25tcFBvaUtmMm9LMkdfVUdhOGJ3dEk1cyIsImtpZCI6Impvb25tcFBvaUtmMm9LMkdfVUdhOGJ3dEk1cyJ9.eyJpc3MiOiJodHRwczovL2lkc3J2My5jb20iLCJhdWQiOiJodHRwczovL2lkc3J2My5jb20vcmVzb3VyY2VzIiwiZXhwIjoxNTE2MTAxMDQyLCJuYmYiOjE1MTYwOTc0NDIsImNsaWVudF9pZCI6ImFwcC0wZTk2Njk1LXRjZi1kM2Q3ZWNhYWIzYmE0OThlODZkNGJmNDdjOTVlZDcxZSIsInJlYWNoIjoidGVuYW50IiwidGVuYW50X2lkIjoiMTI1NTEiLCJ0ZW5hbnRfZ3VpZCI6IjQyOWQ3M2I1LTgzYjUtNGFiYS1hZmIwLTkzM2U0MTA3MDRmNyIsInNjb3BlIjpbImNsaWVudF9kYXRhIiwiY2xpZW50X2ZpbmFuY2lhbF9kYXRhIiwiZmlybV9kYXRhIiwiZnVuZF9kYXRhIl19.Ya11JnJJiZUme6fbt4SVebY_C9ddOVXx8xqphePk3fiS03r8uixZf0-tfEmwVUXHF9GoUGBIb-CC8Q7EufVmeIsWbdzfmpfjAI6_ZOwII18xWmw7_PcHxlNXcFgOt69uTRm7nTwuw0scSqFxNH089ofE37CTLkrafOYBVD_GVtwWcP2vBv_1LXXuapT3rvKJV_q8oOgN5B6sSrlUAVKGf65Urvbo_WIhzveuXHmlp5jZPUg0VRXDoYlQvfFdMSfLBjgQIsmyHOqdLdLYNfhKBgHn_bRUsbhb8BJjBdVhBzff0YFfsQe19_OL7wLGCaFX34H01awS_LXbT1K3NmoFxw";
             httpWebRequest.Headers["x-api-key"] = "app-0e96695-c31c347ba17447e6860c8e3b2abb208d";
             httpWebRequest.Headers["Authorization"] = "Bearer " + accessToken;
         }
